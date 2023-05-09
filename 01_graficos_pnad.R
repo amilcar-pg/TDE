@@ -120,7 +120,8 @@ salario_idade_estratificado <- survey_pnadc_2022_04 |>
 salario_idade_estratificado |> 
   ggplot(aes(x = V2009,
              y = salario_medio,
-             color = educacao_modelado)) +
+             color = educacao_modelado
+             )) +
   geom_line() +
   geom_smooth(se = FALSE) + 
   labs(x = "Idade",
@@ -232,6 +233,42 @@ desempregados_anos_estudo |>
 ggplot2::ggsave(
   plot = last_plot(),
   filename = "output/pnad/desemprego_anos_estudo.png",
+  width = 7200,
+  height = 4050,
+  dpi = 600,
+  units = "px")
+
+desempregados_anos_estudo <- survey_pnadc_2022_04 |> 
+  dplyr::filter(V2009 > 17, V2009 < 65,
+                V2010 != "Ignorado") |> 
+  dplyr::group_by(VD3005) |> 
+  dplyr::summarise(
+    txdesocup = survey_ratio(numerator = VD4002 == "Pessoas desocupadas",
+                             denominator = VD4001 == "Pessoas na força de trabalho",
+                             na.rm = TRUE))
+
+desempregados_anos_estudo |> 
+  dplyr::mutate(VD3005 = as.numeric(VD3005) - 1) |> 
+  ggplot(aes(x = VD3005,
+             y = txdesocup)) +
+  geom_line() +
+  geom_smooth(se = FALSE) + 
+  scale_y_continuous(labels = scales::percent_format(),
+                     limits = c(0, 0.15)) +
+  scale_x_continuous(breaks = 0:16, labels = c(0:15, "16+")) +
+  labs(x = "Anos de estudo",
+       y = "Taxa de Desemprego",
+       color = NULL,
+       caption = "Amilcar L. do Prado G. Gramacho \n 21/2008099",
+       title = "Taxa de desemprego x Anos de Estudo") +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(vjust = 5),
+        axis.title.x = element_text(vjust = -5))
+
+# Salvando o resultado
+ggplot2::ggsave(
+  plot = last_plot(),
+  filename = "output/pnad/desemprego_anos_estudo_geral.png",
   width = 7200,
   height = 4050,
   dpi = 600,
