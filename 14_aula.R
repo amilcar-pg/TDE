@@ -17,7 +17,6 @@ df_exercicio <- df_exercicio |>
     pib_l = rgdpo/emp
   ) |> 
   dplyr::mutate(
-    # pib_l_eua = pib_l/130106.742
     pib_l_eua = pib_l/pib_l[country == "United States"]
   )
 
