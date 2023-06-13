@@ -34,19 +34,19 @@ df_exercicio <- df_exercicio |>
     mi_pop = (pop[which.max(year)]/pop[which.min(year)])^(1/(max(year) - min(year) + 1)) - 1,
     mi_lab = (emp[which.max(year)]/emp[which.min(year)])^(1/(max(year) - min(year) + 1)) - 1,
     s = mean(csh_i),
-    g = 0.02,
+    g = 0.02, # definido pelo professor
     delta_mean = mean(delta),
     h = mean(hc),
     A = mean(ctfp),
     alpha = mean(1-labsh)
-    ) |> 
+  ) |> 
   dplyr::ungroup() |> 
   dplyr::mutate(
     yss_pop = ((s/(mi_pop+g+delta_mean))^(alpha/(1-alpha)))*h*A,
     yss_pop_relativo = yss_pop/mean(yss_pop[country == "United States"]),
     yss_lab = ((s/(mi_lab+g+delta_mean))^(alpha/(1-alpha)))*h*A,
     yss_lab_relativo = yss_lab/mean(yss_lab[country == "United States"])
-    )
+  )
 
 # Resposta
 df_exercicio |> 
